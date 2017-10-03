@@ -136,7 +136,7 @@ MPC::~MPC() {}
 
 vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   bool ok = true;
-  //size_t i;
+  //size_t i; unused variable
   typedef CPPAD_TESTVECTOR(double) Dvector;
 
   // TODO: Set the number of model variables (includes both states and inputs).
@@ -174,7 +174,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   Dvector vars_lowerbound(n_vars);
   Dvector vars_upperbound(n_vars);
 
-  // TODO: Set lower and upper limits for variables.
+  // (DONE) TODO: Set lower and upper limits for variables.
 
   // All non-actuator upper and lower limits to max
   for (int i=0; i<delta_start; i++){
@@ -256,7 +256,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   //
   // {...} is shorthand for creating a vector, so auto x1 = {1.0,2.0}
   // creates a 2 element double vector.
-
+  // create result vector 
    vector<double> result;
 
    result.push_back(solution.x[delta_start]);
@@ -268,8 +268,4 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
    }
 
    return result;
-  //return {solution.x[x_start + 1], solution.x[y_start + 1],
-  //        solution.x[psi_start + 1], solution.x[v_start + 1],
-  //        solution.x[cte_start + 1], solution.x[epsi_start + 1],
-  //        solution.x[delta_start],   solution.x[a_start]};
 }
