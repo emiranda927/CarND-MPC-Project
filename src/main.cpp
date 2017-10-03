@@ -122,7 +122,7 @@ int main() {
           //calculate future state vector deltas due to latency
           double x_t = v*latency;
           double y_t = 0;
-          double psi_t = -v*steer_value/Lf*latency;
+          double psi_t = v*(-1)*steer_value/Lf*latency;
           double v_t = v + throttle_value*latency;
           double cte_t = cte + v*sin(epsi)*latency;
           double epsi_t = epsi + psi_t;

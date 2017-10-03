@@ -56,7 +56,7 @@ class FG_eval {
     //TODO: Tune constant multipliers for each cost addition
     //reference state cost:
     for (int t=0; t<N; t++){
-      fg[0] += 1000*CppAD::pow(vars[cte_start + t], 2); //add all cte over the horizon to cost
+      fg[0] += 1200*CppAD::pow(vars[cte_start + t], 2); //add all cte over the horizon to cost
       fg[0] += 800*CppAD::pow(vars[epsi_start + t], 2); //add vehicle heading error over horizon to cost
       fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2); //add velocity delta (from ref) to cost
     }
