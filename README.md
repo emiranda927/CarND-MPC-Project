@@ -19,6 +19,8 @@ Together, the state vector, update equations, and control vector (actuator value
 ## Polynomial Fitting and Preprocessing
 * TODO
 
+<img src="./ss1.png" width="425"/> <img src="./ss2.png" width="425"/> 
+
 ## Latency
 * TODO 
 
