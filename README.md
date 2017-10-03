@@ -1,6 +1,21 @@
 # CarND-Controls-MPC
 Self-Driving Car Engineer Nanodegree Program
 
+## Summary
+* TODO
+
+## The Model
+* TODO
+
+## Horizon and Timestep
+* TODO
+
+## Polynomial Fitting and Preprocessing
+* TODO
+
+## Latency
+* TODO 
+
 ---
 
 ## Dependencies
