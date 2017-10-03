@@ -94,10 +94,10 @@ int main() {
           double steer_value = j[1]["steering_angle"];
           double throttle_value = j[1]["throttle"];
 
-          double latency = 0.1;
+          double latency = 0.1; //100 ms time delay for actuations
           double Lf = 2.67;
           /*
-          * TODO: Calculate steering angle and throttle using MPC.
+          * (DONE) TODO: Calculate steering angle and throttle using MPC.
           *
           * Both are in between [-1, 1].
           *
@@ -114,11 +114,12 @@ int main() {
             fit_y[i] = (x * sin(-psi) + y * cos(-psi));
           }
 
-
+          //generate third-order polynomial coefficients
           auto coeffs = polyfit(fit_x, fit_y, 3);
           double cte = polyeval(coeffs, 0);
           double epsi = -atan(coeffs[1]);
-
+          
+          //calculate future state vector deltas due to latency
           double x_t = v*latency;
           double y_t = 0;
           double psi_t = -v*steer_value/Lf*latency;
@@ -128,7 +129,7 @@ int main() {
 
           Eigen::VectorXd state(6);
 
-          //state << 0, 0, 0, v, cte, epsi;
+          //state << 0, 0, 0, v, cte, epsi; (used when no latency in system)
           state << x_t, y_t, psi_t, v_t, cte_t, epsi_t;
 
           auto vars = mpc.Solve(state, coeffs);
@@ -136,7 +137,7 @@ int main() {
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
           // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
-          msgJson["steering_angle"] = -1*(vars[0] / (deg2rad(25)*Lf));
+          msgJson["steering_angle"] = -1*(vars[0] / (deg2rad(25)*Lf)); //correct steering direction with -1
           msgJson["throttle"] = vars[1];
 
           //Display the MPC predicted trajectory 
@@ -161,7 +162,7 @@ int main() {
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Yellow line
 
-          for(int i=0; i<70; i+=3){
+          for(int i=0; i<70; i+=3){ //only displaying every third waypoint
             next_x_vals.push_back(i);
             next_y_vals.push_back(polyeval(coeffs, i));
           }
