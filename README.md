@@ -9,20 +9,35 @@ The kinematic model uses a vehicle state consisting of the vehicle position in '
 
 The update equations use basic kinematics to calculate the vehicle state at time t+1. These update equations require the use of actuator outputs to calculate. These actuator values are the acceleration, a (controlled by the throttle), and the steering angle, delta. Below, you will find these update equations for the kinematic model:
 
-* TODO: Add update equations image
+<img src="./eqns.png" width="425"/>
 
 Together, the state vector, update equations, and control vector (actuator values), allow us to succesfully implement a MPC to control the vehicle in the Udacity simulator.
 
 ## Horizon and Timestep
-* TODO
+The Horizon or the length of time the MPC operates over, is defined by the number of steps, N, and the time increment, dt, chosen. N defines the length of the control inputs vector, [δ,a]. As such, N is a major driver of computational cost. In this case, the number of timesteps was chosen as 10 and the time increment was chosen as 0.09 seconds. These values were hand tuned from the default of 10 and 0.1 to produce the desired behavior within the simulator. I found that choosing too small of a timestep caused erratic behavior and too large of a length N was unneccessary. 
 
 ## Polynomial Fitting and Preprocessing
-* TODO
+The x and y coordinates of the waypoints are not with respect to the vehicle but are global coordinates. In order to make it easier to fit the polynomial to the waypoints, we transformed these points into the vehicle coordinate system such that they start at [0,0] and the heading angle is 0 in the vehicle coordinate system. Below are images of the polynomial fit that results in the lowest cost (green) to the reference waypoints (yellow).
 
 <img src="./ss1.png" width="425"/> <img src="./ss2.png" width="425"/> 
 
+I was able to safely achieve a stable result at a top speed of 80 mph with my MPC solution.
+
 ## Latency
-* TODO 
+Real systems are rarely perfect. They often include some sort of latency from the moment an actuation signal is sent to when the actuator reacts to it. In order to model this effect, we included a 100 ms latency in the simulator that I had to deal with. Lines 123-128 in main.cpp illustrate how I chose to deal with latency:
+
+```
+double x_t = v*latency;
+double y_t = 0;
+double psi_t = v*(-1)*steer_value/Lf*latency;
+double v_t = v + throttle_value*latency;
+double cte_t = cte + v*sin(epsi)*latency;
+double epsi_t = epsi + psi_t;
+```
+
+I modified the state variables to take into consideration latency time when solving the MPC. The state vector was initialized with these values:
+
+`state << x_t, y_t, psi_t, v_t, cte_t, epsi_t;`
 
 ---
 
